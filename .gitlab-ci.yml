@@ -3,6 +3,7 @@ image: openjdk:11
 stages:
   - build
   - test
+  - docker
 build:
   stage: build
   script:
