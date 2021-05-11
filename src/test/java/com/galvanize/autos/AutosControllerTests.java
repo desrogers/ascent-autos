@@ -210,6 +210,20 @@ public class AutosControllerTests {
                 .andExpect(status().isBadRequest());
     }
 
+    @Test
+    void testDeleteAuto_VinExists() throws Exception {
+        doNothing().when(autosService).deleteAuto(anyString());
+        mockMvc.perform(delete("/api/autos/123abc"))
+                .andExpect(status().isAccepted());
+    }
+
+    @Test
+    void testDeleteAuto_VinNotExist() throws Exception {
+        doThrow(new RuntimeException()).when(autosService).deleteAuto(anyString());
+        mockMvc.perform(delete("/api/autos/123abc78962"))
+                .andExpect(status().isNoContent());
+    }
+
 
     /*
         GET /api/autos
@@ -242,9 +256,5 @@ public class AutosControllerTests {
         DELETE /api/autos/{vin}
             /api/autos/{vin} - 202 if car successfully deleted
             /api/autos/{vin} - 204 if no car with matching vin exists
-
      */
-
-
-
 }

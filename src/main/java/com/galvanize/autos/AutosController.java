@@ -67,4 +67,14 @@ public class AutosController {
         }
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
+    @DeleteMapping("/{vin}")
+    public ResponseEntity deleteAuto(@PathVariable String vin) {
+        try {
+            autosService.deleteAuto(vin);
+        } catch(Exception e) {
+            return new ResponseEntity(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity(HttpStatus.ACCEPTED);
+    }
 }
