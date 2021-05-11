@@ -69,6 +69,15 @@ public class AutosControllerTests {
                 .andExpect(jsonPath("$[0].color", is("color0")));
     }
 
+    @Test
+    void testGetAutosByColor_IfColorNotExists() throws Exception {
+        List<Automobiles> expected = new ArrayList<>();
+        when(autosService.getByColor(anyString())).thenReturn(expected);
+
+        mockMvc.perform(get("/api/autos?color=color50"))
+                .andExpect(status().isNoContent());
+    }
+
     /*
         GET /api/autos
             /api/autos - Returns list of all autos in the database

@@ -18,8 +18,13 @@ public class AutosController {
     @GetMapping
     public ResponseEntity<List<Automobiles>> getAllAutos(@RequestParam(required = false) String color) {
         if (color != null) {
-            return new ResponseEntity<>(autosService.getByColor(color), HttpStatus.OK);
+            List<Automobiles> autosList = autosService.getByColor(color);
+            if (autosList.size() > 0) {
+                return new ResponseEntity<>(autosList, HttpStatus.OK);
+            }
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
+
         List<Automobiles> autosList = autosService.getAllAutos();
         if (autosList.size() > 0) {
             return new ResponseEntity<>(autosList, HttpStatus.OK);
