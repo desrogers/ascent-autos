@@ -6,15 +6,20 @@ import java.util.List;
 
 @Service
 public class AutosService {
+    AutosRepository autosRepository;
 
     AutosList autosList = new AutosList();
+
+    AutosService(AutosRepository autosRepository) {
+        this.autosRepository = autosRepository;
+    }
 
     AutosService() {
 
     }
 
     public List<Automobiles> getAllAutos() {
-        return autosList.getList();
+        return new AutosList(autosRepository.findAll()).getList();
     }
 
     public Automobiles addAuto(Automobiles auto) {
