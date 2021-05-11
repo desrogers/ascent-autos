@@ -3,6 +3,7 @@ image: openjdk:11
 stages:
   - build
   - test
+  - jacoco
   - docker
 build:
   stage: build
@@ -18,6 +19,12 @@ test:
   artifacts:
     paths:
       - build/test-results/test/TEST*.xml
+jacoco:
+  stage: jacoco
+  needs:
+    - test
+  script:
+    ./gradlew jacocoTestCoverageVerification
 docker:
   image: docker:20
   needs:
