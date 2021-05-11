@@ -14,8 +14,8 @@ public class AutosService {
         return autosList.getList();
     }
 
-    public void addAuto(Automobiles auto) {
-        autosList.addAuto(auto);
+    public Automobiles addAuto(Automobiles auto) {
+        return autosList.addAuto(auto);
     }
 
     public List<Automobiles> getByColor(String color) {
@@ -27,6 +27,10 @@ public class AutosService {
     }
 
     public List<Automobiles> getByColorAndMake(String color, String make) {
+        return null;
+    }
+
+    public Automobiles getByVin(String vin) {
         return null;
     }
 }

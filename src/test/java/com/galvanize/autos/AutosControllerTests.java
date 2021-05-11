@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.ArrayList;
@@ -136,6 +137,46 @@ public class AutosControllerTests {
         mockMvc.perform(get("/api/autos?color=color25&make=Make2"))
                 .andExpect(status().isNoContent());
     }
+
+    @Test
+    void testGetAutosByVin_IfVinExists() throws Exception {
+        when(autosService.getByVin(anyString())).thenReturn(testList.getList().get(1));
+
+        mockMvc.perform(get("/api/autos/vin1"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.vin", is("vin1")));
+    }
+
+    @Test
+    void testGetAutosByVin_IfVinNotExists() throws Exception {
+        when(autosService.getByVin(anyString())).thenReturn(null);
+
+        mockMvc.perform(get("/api/autos/vin12"))
+                .andExpect(status().isNoContent());
+    }
+
+    @Test
+    void testPostAuto_Valid() throws Exception {
+        Automobiles expected = new Automobiles(2000, "Toyota", "Camry", "blue", "Me", "123abc");
+        when(autosService.addAuto(any(Automobiles.class))).thenReturn(expected);
+
+        mockMvc.perform(post("/api/autos")
+                    .content("{\"year\":\"2000\",\"make\":\"Toyota\",\"model\":\"Camry\",\"color\":\"Blue\",\"owner\":\"Me\",\"vin\":\"123abc\"}")
+                    .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.vin", is("123abc")));
+    }
+
+    @Test
+    void testPostAuto_Invalid() throws Exception {
+        when(autosService.addAuto(any(Automobiles.class))).thenReturn(null);
+
+        mockMvc.perform(post("/api/autos")
+                .content("{\"year\":\"2000\",\"make\":\"Toyota\"}")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
 
     /*
         GET /api/autos

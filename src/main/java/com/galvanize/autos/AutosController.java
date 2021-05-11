@@ -34,4 +34,22 @@ public class AutosController {
         }
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
+    @GetMapping("/{vin}")
+    public ResponseEntity<Automobiles> getAutoByVin(@PathVariable String vin) {
+        Automobiles auto = autosService.getByVin(vin);
+        if (auto != null) {
+            return new ResponseEntity<>(auto, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @PostMapping
+    public ResponseEntity<Automobiles> postAuto(@RequestBody Automobiles auto) {
+        Automobiles newAuto = autosService.addAuto(auto);
+        if (newAuto != null) {
+            return new ResponseEntity<>(newAuto, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
 }

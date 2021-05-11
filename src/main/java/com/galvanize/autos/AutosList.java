@@ -8,8 +8,9 @@ public class AutosList {
 
     public AutosList() {}
 
-    public void addAuto(Automobiles auto) {
+    public Automobiles addAuto(Automobiles auto) {
         autosList.add(auto);
+        return auto;
     }
 
     public List<Automobiles> getList() {
