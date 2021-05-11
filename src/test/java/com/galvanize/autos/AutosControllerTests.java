@@ -78,6 +78,26 @@ public class AutosControllerTests {
                 .andExpect(status().isNoContent());
     }
 
+    @Test
+    void testGetAutosByMake_IfMakeExists() throws Exception {
+        List<Automobiles> expected = new ArrayList<>();
+        expected.add(testList.getList().get(0));
+        when(autosService.getByMake(anyString())).thenReturn(expected);
+
+        mockMvc.perform(get("/api/autos?make=Make0"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].make", is("Make0")));
+    }
+
+    @Test
+    void testGetAutosByMake_IfMakeNotExists() throws Exception {
+        List<Automobiles> expected = new ArrayList<>();
+        when(autosService.getByMake(anyString())).thenReturn(expected);
+
+        mockMvc.perform(get("/api/autos?make=Make50"))
+                .andExpect(status().isNoContent());
+    }
+
     /*
         GET /api/autos
             /api/autos - Returns list of all autos in the database
