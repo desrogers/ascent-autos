@@ -17,4 +17,8 @@ public class AutosService {
     public void addAuto(Automobiles auto) {
         autosList.addAuto(auto);
     }
+
+    public List<Automobiles> getByColor(String color) {
+        return null;
+    }
 }

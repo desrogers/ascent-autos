@@ -2,9 +2,7 @@ package com.galvanize.autos;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -18,7 +16,10 @@ public class AutosController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Automobiles>> getAllAutos() {
+    public ResponseEntity<List<Automobiles>> getAllAutos(@RequestParam(required = false) String color) {
+        if (color != null) {
+            return new ResponseEntity<>(autosService.getByColor(color), HttpStatus.OK);
+        }
         List<Automobiles> autosList = autosService.getAllAutos();
         if (autosList.size() > 0) {
             return new ResponseEntity<>(autosList, HttpStatus.OK);

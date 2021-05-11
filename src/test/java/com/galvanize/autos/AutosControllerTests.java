@@ -7,9 +7,11 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
@@ -54,6 +56,17 @@ public class AutosControllerTests {
         mockMvc.perform(get("/api/autos"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(5)));
+    }
+
+    @Test
+    void testGetAutosByColor_IfColorExists() throws Exception {
+        List<Automobiles> expected = new ArrayList<>();
+        expected.add(testList.getList().get(0));
+        when(autosService.getByColor(anyString())).thenReturn(expected);
+
+        mockMvc.perform(get("/api/autos?color=color0"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].color", is("color0")));
     }
 
     /*
