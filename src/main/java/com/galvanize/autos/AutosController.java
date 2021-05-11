@@ -17,23 +17,18 @@ public class AutosController {
 
     @GetMapping
     public ResponseEntity<List<Automobiles>> getAllAutos(@RequestParam(required = false) String color, @RequestParam(required = false) String make) {
-        if (color != null) {
-            List<Automobiles> autosList = autosService.getByColor(color);
-            if (autosList.size() > 0) {
-                return new ResponseEntity<>(autosList, HttpStatus.OK);
-            }
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        List<Automobiles> autosList;
+
+        if (color != null && make != null) {
+            autosList = autosService.getByColorAndMake(color, make);
+        } else if (color != null) {
+            autosList = autosService.getByColor(color);
+        } else if (make != null) {
+            autosList = autosService.getByMake(make);
+        } else {
+            autosList = autosService.getAllAutos();
         }
 
-        if (make != null) {
-            List<Automobiles> autosList = autosService.getByMake(make);
-            if (autosList.size() > 0) {
-                return new ResponseEntity<>(autosList, HttpStatus.OK);
-            }
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
-
-        List<Automobiles> autosList = autosService.getAllAutos();
         if (autosList.size() > 0) {
             return new ResponseEntity<>(autosList, HttpStatus.OK);
         }

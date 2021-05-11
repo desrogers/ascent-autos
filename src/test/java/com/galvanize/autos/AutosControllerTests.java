@@ -98,6 +98,45 @@ public class AutosControllerTests {
                 .andExpect(status().isNoContent());
     }
 
+    @Test
+    void testGetAutosByColorAndMake_IfBothExist() throws Exception {
+        List<Automobiles> expected = new ArrayList<>();
+        expected.add(testList.getList().get(2));
+        when(autosService.getByColorAndMake(anyString(), anyString())).thenReturn(expected);
+
+        mockMvc.perform(get("/api/autos?color=color2&make=Make2"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].color", is("color2")))
+                .andExpect(jsonPath("$[0].make", is("Make2")));
+    }
+
+    @Test
+    void testGetAutosByColorAndMake_IfBothNotExist() throws Exception {
+        List<Automobiles> expected = new ArrayList<>();
+        when(autosService.getByColorAndMake(anyString(), anyString())).thenReturn(expected);
+
+        mockMvc.perform(get("/api/autos?color=color25&make=Make25"))
+                .andExpect(status().isNoContent());
+    }
+
+    @Test
+    void testGetAutosByColorAndMake_IfOnlyColorExists() throws Exception {
+        List<Automobiles> expected = new ArrayList<>();
+        when(autosService.getByColorAndMake(anyString(), anyString())).thenReturn(expected);
+
+        mockMvc.perform(get("/api/autos?color=color2&make=Make25"))
+                .andExpect(status().isNoContent());
+    }
+
+    @Test
+    void testGetAutosByColorAndMake_IfOnlyMakeExists() throws Exception {
+        List<Automobiles> expected = new ArrayList<>();
+        when(autosService.getByColorAndMake(anyString(), anyString())).thenReturn(expected);
+
+        mockMvc.perform(get("/api/autos?color=color25&make=Make2"))
+                .andExpect(status().isNoContent());
+    }
+
     /*
         GET /api/autos
             /api/autos - Returns list of all autos in the database

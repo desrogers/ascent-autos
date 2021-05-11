@@ -25,4 +25,8 @@ public class AutosService {
     public List<Automobiles> getByMake(String make) {
         return null;
     }
+
+    public List<Automobiles> getByColorAndMake(String color, String make) {
+        return null;
+    }
 }
