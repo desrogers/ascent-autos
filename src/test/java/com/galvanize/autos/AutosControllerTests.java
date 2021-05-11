@@ -177,6 +177,39 @@ public class AutosControllerTests {
                 .andExpect(status().isBadRequest());
     }
 
+    @Test
+    void testUpdateAuto_VinExists() throws Exception {
+        Automobiles expected = new Automobiles(1997, "Toyota", "MR2", "green", "Me", "123abc");
+        when(autosService.updateAuto(anyString(),any(UpdateAuto.class))).thenReturn(expected);
+
+        mockMvc.perform(patch("/api/autos/123abc")
+                    .content("{\"color\":\"green\",\"owner\":\"Me\"}")
+                    .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.color", is("green")))
+                .andExpect(jsonPath("$.owner", is("Me")));
+    }
+
+    @Test
+    void testUpdateAuto_VinDoesntExist() throws Exception {
+        when(autosService.updateAuto(anyString(),any(UpdateAuto.class))).thenReturn(null);
+
+        mockMvc.perform(patch("/api/autos/ANB")
+            .content("{\"color\":\"green\",\"owner\":\"Me\"}")
+            .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isNoContent());
+    }
+
+    @Test
+    void testUpdateAuto_BadRequest() throws Exception {
+        when(autosService.updateAuto(anyString(),any(UpdateAuto.class))).thenThrow(new Exception());
+
+        mockMvc.perform(patch("/api/autos/123abc")
+                .content("{\"color\":\"green\",\"speed\":\"aet34e\"}")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
 
     /*
         GET /api/autos

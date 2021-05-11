@@ -1,6 +1,7 @@
 package com.galvanize.autos;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -51,5 +52,19 @@ public class AutosController {
             return new ResponseEntity<>(newAuto, HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+
+    @PatchMapping("/{vin}")
+    public ResponseEntity<Automobiles> updateAuto(@RequestBody UpdateAuto info, @PathVariable String vin) {
+        Automobiles auto;
+        try {
+            auto = autosService.updateAuto(vin, info);
+        } catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        if (auto != null) {
+            return new ResponseEntity<>(auto, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

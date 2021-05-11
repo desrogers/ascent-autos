@@ -33,4 +33,8 @@ public class AutosService {
     public Automobiles getByVin(String vin) {
         return null;
     }
+
+    public Automobiles updateAuto(String vin, UpdateAuto info) throws Exception{
+        return null;
+    }
 }
