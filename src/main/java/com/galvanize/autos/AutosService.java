@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class AutosService {
+public class AutosService{
     AutosRepository autosRepository;
 
     AutosList autosList = new AutosList();
@@ -23,7 +23,7 @@ public class AutosService {
     }
 
     public Automobiles addAuto(Automobiles auto) {
-        return autosList.addAuto(auto);
+        return autosRepository.save(auto);
     }
 
     public List<Automobiles> getByColor(String color) {
