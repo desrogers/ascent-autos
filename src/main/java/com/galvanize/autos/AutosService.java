@@ -58,6 +58,12 @@ public class AutosService{
         return autosRepository.save(oAuto.get());
     }
 
-    public void deleteAuto(String anyString) {
+    public void deleteAuto(String vin) {
+        Optional<Automobiles> oAuto = autosRepository.findByVin(vin);
+        if (oAuto.isPresent()) {
+            autosRepository.delete(oAuto.get());
+        } else {
+            throw new RuntimeException();
+        }
     }
 }

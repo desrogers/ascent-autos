@@ -13,11 +13,11 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class AutosServiceTest {
@@ -142,5 +142,18 @@ class AutosServiceTest {
 
     @Test
     void deleteAuto() {
+        Automobiles auto = new Automobiles(2025, "Make", "Model", "Color", "Owner", "ABJD");
+        when(autosRepository.findByVin(anyString())).thenReturn(Optional.of(auto));
+        autosService.deleteAuto(auto.getVin());
+
+        verify(autosRepository).delete(any(Automobiles.class));
+    }
+
+    @Test
+    void deleteAuto_throwsException() {
+        when(autosRepository.findByVin(anyString())).thenReturn(Optional.empty());
+        assertThrows(RuntimeException.class, () -> {
+            autosService.deleteAuto("NOVIN");
+        });
     }
 }
