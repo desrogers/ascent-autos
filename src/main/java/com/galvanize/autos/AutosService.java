@@ -49,8 +49,13 @@ public class AutosService{
         return autosRepository.findByVin(vin).orElse(null);
     }
 
-    public Automobiles updateAuto(String vin, UpdateAuto info) throws Exception{
-        return null;
+    public Automobiles updateAuto(String vin, UpdateAuto info) throws Exception {
+        Optional<Automobiles> oAuto = autosRepository.findByVin(vin);
+        if (oAuto.isPresent()) {
+            oAuto.get().setColor(info.getColor());
+            oAuto.get().setOwner(info.getOwner());
+        }
+        return autosRepository.save(oAuto.get());
     }
 
     public void deleteAuto(String anyString) {

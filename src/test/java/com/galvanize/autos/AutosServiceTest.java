@@ -130,7 +130,14 @@ class AutosServiceTest {
     }
 
     @Test
-    void updateAuto() {
+    void updateAuto() throws Exception {
+        Automobiles expected = new Automobiles(2025, "Make", "Model", "Color", "Owner", "ABJD");
+        when(autosRepository.findByVin(anyString())).thenReturn(Optional.of(expected));
+        when(autosRepository.save(any(Automobiles.class))).thenReturn(expected);
+        Automobiles actual = autosService.updateAuto(expected.getVin(), new UpdateAuto("Violet", "Anybody"));
+        assertThat(actual).isNotNull();
+        assertEquals(actual.getColor(), expected.getColor(), "Updating auto returns auto with supplied vin with updated fields");
+        assertEquals(actual.getOwner(), expected.getOwner());
     }
 
     @Test
