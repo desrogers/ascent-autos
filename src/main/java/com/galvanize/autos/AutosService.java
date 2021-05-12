@@ -33,6 +33,8 @@ public class AutosService{
     }
 
     public List<Automobiles> getByMake(String make) {
+        List<Automobiles> autos = autosRepository.findByMake(make);
+        if (autos.size() > 0) return autos;
         return null;
     }
 

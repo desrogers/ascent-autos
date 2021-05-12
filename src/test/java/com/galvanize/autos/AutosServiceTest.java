@@ -68,6 +68,13 @@ class AutosServiceTest {
 
     @Test
     void getByMake() {
+        Automobiles auto = new Automobiles(2025, "Make", "Model", "color", "Owner", "ABJD");
+        List<Automobiles> expected = new ArrayList<>();
+        expected.add(auto);
+        when(autosRepository.findByMake(anyString())).thenReturn(expected);
+        List<Automobiles> actual = autosService.getByMake("Make");
+        assertThat(actual).isNotNull();
+        assertThat(actual.size() > 0).isTrue();
     }
 
     @Test
