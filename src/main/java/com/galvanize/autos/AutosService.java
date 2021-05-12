@@ -27,6 +27,8 @@ public class AutosService{
     }
 
     public List<Automobiles> getByColor(String color) {
+        List<Automobiles> autos = autosRepository.findByColor(color);
+        if (autos.size() > 0) return autos;
         return null;
     }
 

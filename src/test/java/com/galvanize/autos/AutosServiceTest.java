@@ -11,8 +11,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -55,6 +57,13 @@ class AutosServiceTest {
 
     @Test
     void getByColor() {
+        Automobiles auto = new Automobiles(2025, "Make", "Model", "color", "Owner", "ABJD");
+        List<Automobiles> expected = new ArrayList<>();
+        expected.add(auto);
+        when(autosRepository.findByColor(anyString())).thenReturn(expected);
+        List<Automobiles> actual = autosService.getByColor("color");
+        assertThat(actual).isNotNull();
+        assertThat(actual.size() > 0).isTrue();
     }
 
     @Test
