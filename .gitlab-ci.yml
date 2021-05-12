@@ -31,7 +31,7 @@ jacoco:
   allow_failure: true
   artifacts:
     when: always
-    path:
+    paths:
       - build/reports/jacoco
 docker:
   image: docker:20
