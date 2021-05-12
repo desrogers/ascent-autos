@@ -33,7 +33,6 @@ public class AutosControllerTests {
 
     @BeforeEach
     void setUp() {
-        AutosService autosService = new AutosService();
         AutosController autosController = new AutosController(autosService);
         testList = new AutosList();
         for (int i = 0; i < 5; i++) {
