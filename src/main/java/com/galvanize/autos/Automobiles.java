@@ -43,4 +43,12 @@ public class Automobiles {
         this.owner = owner;
         this.vin = vin;
     }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
+
+    public void setOwner(String owner) {
+        this.owner = owner;
+    }
 }
