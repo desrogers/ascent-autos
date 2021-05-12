@@ -67,6 +67,14 @@ class AutosServiceTest {
     }
 
     @Test
+    void getByColor_NoResults() {
+        List<Automobiles> expected = new ArrayList<>();
+        when(autosRepository.findByColor(anyString())).thenReturn(expected);
+        List<Automobiles> actual = autosService.getByColor("color1");
+        assertThat(actual).isNull();
+    }
+
+    @Test
     void getByMake() {
         Automobiles auto = new Automobiles(2025, "Make", "Model", "color", "Owner", "ABJD");
         List<Automobiles> expected = new ArrayList<>();
@@ -78,7 +86,30 @@ class AutosServiceTest {
     }
 
     @Test
+    void getByMake_NoResults() {
+        List<Automobiles> expected = new ArrayList<>();
+        when(autosRepository.findByMake(anyString())).thenReturn(expected);
+        List<Automobiles> actual = autosService.getByMake("Make");
+        assertThat(actual).isNull();
+    }
+
+    @Test
     void getByColorAndMake() {
+        Automobiles auto = new Automobiles(2025, "Make", "Model", "Color", "Owner", "ABJD");
+        List<Automobiles> expected = new ArrayList<>();
+        expected.add(auto);
+        when(autosRepository.findByColorAndMake(anyString(), anyString())).thenReturn(expected);
+        List<Automobiles> actual = autosService.getByColorAndMake("Color", "Make");
+        assertThat(actual).isNotNull();
+        assertThat(actual.size() > 0).isTrue();
+    }
+
+    @Test
+    void getByColorAndMake_NoResults() {
+        List<Automobiles> expected = new ArrayList<>();
+        when(autosRepository.findByColorAndMake(anyString(), anyString())).thenReturn(expected);
+        List<Automobiles> actual = autosService.getByColorAndMake("Color", "Make");
+        assertThat(actual).isNull();
     }
 
     @Test

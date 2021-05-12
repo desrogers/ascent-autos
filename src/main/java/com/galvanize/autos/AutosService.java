@@ -39,6 +39,8 @@ public class AutosService{
     }
 
     public List<Automobiles> getByColorAndMake(String color, String make) {
+        List<Automobiles> autos = autosRepository.findByColorAndMake(color, make);
+        if (autos.size() > 0) return autos;
         return null;
     }
 
