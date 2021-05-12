@@ -54,8 +54,9 @@ public class AutosService{
         if (oAuto.isPresent()) {
             oAuto.get().setColor(info.getColor());
             oAuto.get().setOwner(info.getOwner());
+            return autosRepository.save(oAuto.get());
         }
-        return autosRepository.save(oAuto.get());
+        return null;
     }
 
     public void deleteAuto(String vin) {
