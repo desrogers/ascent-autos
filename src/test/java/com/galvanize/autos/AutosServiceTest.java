@@ -10,11 +10,13 @@ import org.mockito.junit.jupiter.MockitoSettings;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -114,6 +116,17 @@ class AutosServiceTest {
 
     @Test
     void getByVin() {
+        Automobiles expected = new Automobiles(2025, "Make", "Model", "Color", "Owner", "ABJD");
+        when(autosRepository.findByVin(anyString())).thenReturn(Optional.of(expected));
+        Automobiles actual = autosService.getByVin("ABJD");
+        assertThat(actual).isNotNull();
+        assertEquals(actual, expected, "Getting by vin returns auto with supplied vin");
+    }
+
+    @Test
+    void getByVin_NoResults() {
+        Automobiles actual = autosService.getByVin("ABJ354D");
+        assertThat(actual).isNull();
     }
 
     @Test

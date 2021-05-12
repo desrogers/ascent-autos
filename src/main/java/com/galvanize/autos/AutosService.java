@@ -3,6 +3,7 @@ package com.galvanize.autos;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class AutosService{
@@ -45,7 +46,7 @@ public class AutosService{
     }
 
     public Automobiles getByVin(String vin) {
-        return null;
+        return autosRepository.findByVin(vin).orElse(null);
     }
 
     public Automobiles updateAuto(String vin, UpdateAuto info) throws Exception{
