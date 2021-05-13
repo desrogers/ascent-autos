@@ -1,7 +1,6 @@
 package com.galvanize.autos;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,7 +29,7 @@ public class AutosController {
             autosList = autosService.getAllAutos();
         }
 
-        if (autosList.size() > 0) {
+        if (autosList != null) {
             return new ResponseEntity<>(autosList, HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);

@@ -9,21 +9,18 @@ import java.util.Optional;
 public class AutosService{
     AutosRepository autosRepository;
 
-    AutosList autosList = new AutosList();
-
     AutosService(AutosRepository autosRepository) {
         this.autosRepository = autosRepository;
     }
 
-    AutosService() {
-
-    }
-
     public List<Automobiles> getAllAutos() {
-        return new AutosList(autosRepository.findAll()).getList();
+        List<Automobiles> autos = autosRepository.findAll();
+        if (autos.size() > 0) return autos;
+        return null;
     }
 
     public Automobiles addAuto(Automobiles auto) {
+        if (auto.getVin() == null) return null;
         return autosRepository.save(auto);
     }
 
@@ -52,8 +49,8 @@ public class AutosService{
     public Automobiles updateAuto(String vin, UpdateAuto info) throws Exception {
         Optional<Automobiles> oAuto = autosRepository.findByVin(vin);
         if (oAuto.isPresent()) {
-            oAuto.get().setColor(info.getColor());
-            oAuto.get().setOwner(info.getOwner());
+            if (info.getColor() != null) oAuto.get().setColor(info.getColor());
+            if (info.getOwner() != null) oAuto.get().setOwner(info.getOwner());
             return autosRepository.save(oAuto.get());
         }
         return null;

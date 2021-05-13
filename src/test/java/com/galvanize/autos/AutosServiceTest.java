@@ -11,8 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
@@ -33,9 +32,8 @@ class AutosServiceTest {
 
     @Test
     void getAllAutos_empty() {
-        List<Automobiles> expected = new ArrayList<>();
         List<Automobiles> actual = autosService.getAllAutos();
-        assertEquals(expected, actual, "Getting a list of all automobiles when first initializing should return an empty list");
+        assertNull(actual, "Getting a list of all automobiles when first initializing should return null");
     }
 
     @Test
