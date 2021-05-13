@@ -223,4 +223,27 @@ class AutosApiApplicationTests {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
     }
 
+    @Test
+    void deleteAuto_exists_isApproved() {
+        int randomNumber = r.nextInt(30);
+        String vin = testAutos.get(randomNumber).getVin();
+
+        HttpHeaders headers = new HttpHeaders();
+        HttpEntity<Void> request = new HttpEntity<>(headers);
+
+        ResponseEntity<Void> response = testRestTemplate.exchange("/api/autos/" + vin, HttpMethod.DELETE, request, Void.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.ACCEPTED);
+    }
+
+    @Test
+    void deleteAuto_notExists_noContent() {
+        HttpHeaders headers = new HttpHeaders();
+        HttpEntity<Void> request = new HttpEntity<>(headers);
+
+        ResponseEntity<Void> response = testRestTemplate.exchange("/api/autos/df51w", HttpMethod.DELETE, request, Void.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+    }
+
 }
