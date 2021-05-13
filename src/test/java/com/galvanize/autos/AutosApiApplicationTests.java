@@ -1,5 +1,7 @@
 package com.galvanize.autos;
 
+import org.apache.http.client.HttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -7,12 +9,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.*;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -20,6 +25,7 @@ class AutosApiApplicationTests {
 
     @Autowired
     TestRestTemplate testRestTemplate;
+    RestTemplate testPatchRestTemplate;
 
     @Autowired
     AutosRepository autosRepository;
@@ -28,6 +34,10 @@ class AutosApiApplicationTests {
     List<Automobiles> testAutos;
     @BeforeEach
     void setUp(){
+        testPatchRestTemplate = testRestTemplate.getRestTemplate();
+        HttpClient httpClient = HttpClientBuilder.create().build();
+        testPatchRestTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory(httpClient));
+
         r = new Random();
         testAutos = new ArrayList<>();
 
@@ -126,6 +136,24 @@ class AutosApiApplicationTests {
     }
 
     @Test
+    void getByVin_exists_returnsAuto() {
+        int randomNumber = r.nextInt(30);
+        String vin = testAutos.get(randomNumber).getVin();
+
+        ResponseEntity<Automobiles> response = testRestTemplate.getForEntity("/api/autos/" + vin, Automobiles.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody()).isNotNull();
+        assertEquals(response.getBody().getVin(), vin);
+    }
+
+    @Test
+    void getByVin_notExists_returnsEmpty() {
+        ResponseEntity<Automobiles> response = testRestTemplate.getForEntity("/api/autos/97841s", Automobiles.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+        assertThat(response.getBody()).isNull();
+    }
+
+    @Test
     void postAuto_valid_returnsAuto() {
         Automobiles auto = new Automobiles(1995, "BMW", "i3", "green", "Tim", "MNO951");
         HttpHeaders headers = new HttpHeaders();
@@ -147,6 +175,52 @@ class AutosApiApplicationTests {
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
         assertNull(response.getBody());
-
     }
+
+    @Test
+    void updateAuto_valid_returnsAuto() {
+        int randomNumber = r.nextInt(30);
+        String vin = testAutos.get(randomNumber).getVin();
+
+        UpdateAuto update = new UpdateAuto("brown","Pete");
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Content-Type", MediaType.APPLICATION_JSON_VALUE);
+        HttpEntity<UpdateAuto> request = new HttpEntity<>(update, headers);
+
+        ResponseEntity<Automobiles> response = testPatchRestTemplate.exchange("/api/autos/" + vin, HttpMethod.PATCH, request, Automobiles.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertEquals(response.getBody().getColor(), "brown");
+        assertEquals(response.getBody().getVin(), vin);
+    }
+
+    @Test
+    void updateAuto_invalid_returnsEmpty() {
+        UpdateAuto update = new UpdateAuto("brown","Pete");
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Content-Type", MediaType.APPLICATION_JSON_VALUE);
+        HttpEntity<UpdateAuto> request = new HttpEntity<>(update, headers);
+
+        ResponseEntity<Automobiles> response = testPatchRestTemplate.exchange("/api/autos/ASDF132", HttpMethod.PATCH, request, Automobiles.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+        assertNull(response.getBody());
+    }
+
+    @Test
+    void updateAuto_invalid_throwsException() {
+        int randomNumber = r.nextInt(30);
+        String vin = testAutos.get(randomNumber).getVin();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Content-Type", MediaType.APPLICATION_JSON_VALUE);
+        HttpEntity<Integer> request = new HttpEntity<>(1, headers);
+
+        ResponseEntity<Automobiles> response = testPatchRestTemplate.exchange("/api/autos/" + vin, HttpMethod.PATCH, request, Automobiles.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+    }
+
 }
