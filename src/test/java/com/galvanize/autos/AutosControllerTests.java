@@ -17,7 +17,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -42,7 +41,7 @@ public class AutosControllerTests {
 
     @Test
     void testGetAllAutos_NoExistingAutos() throws Exception {
-        when(autosService.getAllAutos()).thenReturn(new AutosList().getList());
+        when(autosService.getAllAutos()).thenReturn(null);
 
         mockMvc.perform(get("/api/autos"))
                 .andExpect(status().isNoContent());
@@ -71,8 +70,7 @@ public class AutosControllerTests {
 
     @Test
     void testGetAutosByColor_IfColorNotExists() throws Exception {
-        List<Automobiles> expected = new ArrayList<>();
-        when(autosService.getByColor(anyString())).thenReturn(expected);
+        when(autosService.getByColor(anyString())).thenReturn(null);
 
         mockMvc.perform(get("/api/autos?color=color50"))
                 .andExpect(status().isNoContent());
@@ -91,8 +89,7 @@ public class AutosControllerTests {
 
     @Test
     void testGetAutosByMake_IfMakeNotExists() throws Exception {
-        List<Automobiles> expected = new ArrayList<>();
-        when(autosService.getByMake(anyString())).thenReturn(expected);
+        when(autosService.getByMake(anyString())).thenReturn(null);
 
         mockMvc.perform(get("/api/autos?make=Make50"))
                 .andExpect(status().isNoContent());
@@ -112,8 +109,7 @@ public class AutosControllerTests {
 
     @Test
     void testGetAutosByColorAndMake_IfBothNotExist() throws Exception {
-        List<Automobiles> expected = new ArrayList<>();
-        when(autosService.getByColorAndMake(anyString(), anyString())).thenReturn(expected);
+        when(autosService.getByColorAndMake(anyString(), anyString())).thenReturn(null);
 
         mockMvc.perform(get("/api/autos?color=color25&make=Make25"))
                 .andExpect(status().isNoContent());
@@ -121,8 +117,7 @@ public class AutosControllerTests {
 
     @Test
     void testGetAutosByColorAndMake_IfOnlyColorExists() throws Exception {
-        List<Automobiles> expected = new ArrayList<>();
-        when(autosService.getByColorAndMake(anyString(), anyString())).thenReturn(expected);
+        when(autosService.getByColorAndMake(anyString(), anyString())).thenReturn(null);
 
         mockMvc.perform(get("/api/autos?color=color2&make=Make25"))
                 .andExpect(status().isNoContent());
@@ -130,8 +125,7 @@ public class AutosControllerTests {
 
     @Test
     void testGetAutosByColorAndMake_IfOnlyMakeExists() throws Exception {
-        List<Automobiles> expected = new ArrayList<>();
-        when(autosService.getByColorAndMake(anyString(), anyString())).thenReturn(expected);
+        when(autosService.getByColorAndMake(anyString(), anyString())).thenReturn(null);
 
         mockMvc.perform(get("/api/autos?color=color25&make=Make2"))
                 .andExpect(status().isNoContent());

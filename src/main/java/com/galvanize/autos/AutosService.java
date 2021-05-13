@@ -14,10 +14,13 @@ public class AutosService{
     }
 
     public List<Automobiles> getAllAutos() {
-        return autosRepository.findAll();
+        List<Automobiles> autos = autosRepository.findAll();
+        if (autos.size() > 0) return autos;
+        return null;
     }
 
     public Automobiles addAuto(Automobiles auto) {
+        if (auto.getVin() == null) return null;
         return autosRepository.save(auto);
     }
 
