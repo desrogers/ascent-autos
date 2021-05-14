@@ -20,6 +20,7 @@ public class Automobiles {
     private String owner;
     @JsonFormat(pattern = "MM/dd/yyyy")
     private Date purchaseDate;
+    @Column(unique = true)
     private String vin;
 
     public int getYear() {
@@ -44,6 +45,14 @@ public class Automobiles {
 
     public String getVin() {
         return vin;
+    }
+
+    public Date getPurchaseDate() {
+        return purchaseDate;
+    }
+
+    public void setPurchaseDate(Date purchaseDate) {
+        this.purchaseDate = purchaseDate;
     }
 
     public Automobiles() {
