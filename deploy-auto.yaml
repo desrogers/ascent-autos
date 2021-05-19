@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kenny-auto
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: kenny-auto
+  template:
+    metadata:
+      labels:
+        app: kenny-auto
+    spec:
+      containers:
+        - image: $IMAGE
+          name: kenny-auto
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+          env:
+            - name: DB_HOST
+              value: $DB_HOST
+            - name: DB_NAME
+              value: $DB_NAME
+            - name: DB_USER
+              value: $DB_USER
+            - name: DB_PWD
+              value: $DB_PWD
+      imagePullSecrets: # Be sure the token name matches what you created on K8s
+        - name: test-token
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kenny-auto-lb
+spec:
+  type: LoadBalancer
+  selector:
+    app: kenny-auto
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+      name: http
+
