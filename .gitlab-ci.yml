@@ -52,16 +52,12 @@ docker:
 deploy:
   stage: deploy
   image: registry.gitlab.com/galv-vmw-apr-2021/2-simple-autos/kenny-desmond-autos-api
-  needs:
-    - test
   before_script:
     - export IMAGE="$CI_REGISTRY_IMAGE":"$CI_PIPELINE_IID"
     - aws configure set region us-west-2
     - aws configure set output json
     - aws eks update-kubeconfig --name "$CLUSTER_NAME"
     - aws sts get-caller-identity
-
   script:
-    - envsubst < k8s-deploy.yaml | kubectl apply -f -
-    - kubectl apply -f k8s-service.yaml
+    - envsubst < deploy-auto.yaml | kubectl apply -f -
 
