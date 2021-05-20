@@ -1,61 +1,61 @@
 image: openjdk:11
 
 stages:
-  - build
-  - test
-  - jacoco
-  - docker
+#  - build
+#  - test
+#  - jacoco
+#  - docker
   - deploy
-build:
-  stage: build
-  script:
-    ./gradlew assemble
-  artifacts:
-    paths:
-      - build/libs/*.jar
-test:
-  stage: test
-  needs:
-    - build
-  script:
-    ./gradlew test
-  artifacts:
-    paths:
-      - build/test-results/test/TEST*.xml
-jacoco:
-  stage: jacoco
-  needs:
-    - test
-  script:
-    - ./gradlew jacocoTestReport
-    - ./gradlew jacocoTestCoverageVerification
-  allow_failure: true
-  artifacts:
-    when: always
-    paths:
-      - build/reports/jacoco
-docker:
-  image: docker:20
-  needs:
-    - build
-    - test
-  stage: docker
-  services:
-    - docker:dind
-  before_script:
-    - echo $CI_BUILD_TOKEN | docker login -u "$CI_REGISTRY_USER" --password-stdin $CI_REGISTRY
-  script:
-    - docker build --pull -t "$CI_REGISTRY_IMAGE":"$CI_PIPELINE_IID" .
-    - docker push "$CI_REGISTRY_IMAGE":"$CI_PIPELINE_IID"
-    - docker tag "$CI_REGISTRY_IMAGE":"$CI_PIPELINE_IID" "$CI_REGISTRY_IMAGE":"latest"
-    - docker push "$CI_REGISTRY_IMAGE":"latest"
+#build:
+#  stage: build
+#  script:
+#    ./gradlew assemble
+#  artifacts:
+#    paths:
+#      - build/libs/*.jar
+#test:
+#  stage: test
+#  needs:
+#    - build
+#  script:
+#    ./gradlew test
+#  artifacts:
+#    paths:
+#      - build/test-results/test/TEST*.xml
+#jacoco:
+#  stage: jacoco
+#  needs:
+#    - test
+#  script:
+#    - ./gradlew jacocoTestReport
+#    - ./gradlew jacocoTestCoverageVerification
+#  allow_failure: true
+#  artifacts:
+#    when: always
+#    paths:
+#      - build/reports/jacoco
+#docker:
+#  image: docker:20
+#  needs:
+#    - build
+#    - test
+#  stage: docker
+#  services:
+#    - docker:dind
+#  before_script:
+#    - echo $CI_BUILD_TOKEN | docker login -u "$CI_REGISTRY_USER" --password-stdin $CI_REGISTRY
+#  script:
+#    - docker build --pull -t "$CI_REGISTRY_IMAGE":"$CI_PIPELINE_IID" .
+#    - docker push "$CI_REGISTRY_IMAGE":"$CI_PIPELINE_IID"
+#    - docker tag "$CI_REGISTRY_IMAGE":"$CI_PIPELINE_IID" "$CI_REGISTRY_IMAGE":"latest"
+#    - docker push "$CI_REGISTRY_IMAGE":"latest"
 deploy:
   stage: deploy
   image: registry.gitlab.com/galv-vmw-apr-2021/2-simple-autos/kenny-desmond-autos-api
   before_script:
     - export IMAGE="$CI_REGISTRY_IMAGE":"$CI_PIPELINE_IID"
     - aws configure set aws_access_key_id "$AWS_ACCESS_KEY_ID"
-    - aws configure set aws_secret_access_key_id "$AWS_SECRET_ACCESS_KEY"
+    - aws configure set aws_secret_access_key "$AWS_SECRET_ACCESS_KEY"
     - aws configure set region us-west-2
     - aws configure set output json
     - aws eks update-kubeconfig --name "$CLUSTER_NAME"
