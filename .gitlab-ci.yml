@@ -1,18 +1,18 @@
 image: openjdk:11
 
 stages:
-#  - build
+  - build
 #  - test
 #  - jacoco
-#  - docker
+  - docker
   - deploy
-#build:
-#  stage: build
-#  script:
-#    ./gradlew assemble
-#  artifacts:
-#    paths:
-#      - build/libs/*.jar
+build:
+  stage: build
+  script:
+    ./gradlew assemble
+  artifacts:
+    paths:
+      - build/libs/*.jar
 #test:
 #  stage: test
 #  needs:
@@ -34,21 +34,21 @@ stages:
 #    when: always
 #    paths:
 #      - build/reports/jacoco
-#docker:
-#  image: docker:20
-#  needs:
-#    - build
+docker:
+  image: docker:20
+  needs:
+    - build
 #    - test
-#  stage: docker
-#  services:
-#    - docker:dind
-#  before_script:
-#    - echo $CI_BUILD_TOKEN | docker login -u "$CI_REGISTRY_USER" --password-stdin $CI_REGISTRY
-#  script:
-#    - docker build --pull -t "$CI_REGISTRY_IMAGE":"$CI_PIPELINE_IID" .
-#    - docker push "$CI_REGISTRY_IMAGE":"$CI_PIPELINE_IID"
-#    - docker tag "$CI_REGISTRY_IMAGE":"$CI_PIPELINE_IID" "$CI_REGISTRY_IMAGE":"latest"
-#    - docker push "$CI_REGISTRY_IMAGE":"latest"
+  stage: docker
+  services:
+    - docker:dind
+  before_script:
+    - echo $CI_BUILD_TOKEN | docker login -u "$CI_REGISTRY_USER" --password-stdin $CI_REGISTRY
+  script:
+    - docker build --pull -t "$CI_REGISTRY_IMAGE":"$CI_PIPELINE_IID" .
+    - docker push "$CI_REGISTRY_IMAGE":"$CI_PIPELINE_IID"
+    - docker tag "$CI_REGISTRY_IMAGE":"$CI_PIPELINE_IID" "$CI_REGISTRY_IMAGE":"latest"
+    - docker push "$CI_REGISTRY_IMAGE":"latest"
 deploy:
   stage: deploy
   image: registry.gitlab.com/galv-vmw-apr-2021/2-simple-autos/kenny-desmond-autos-api
